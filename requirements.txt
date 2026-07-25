@@ -1,1 +1,172 @@
-flet
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      // ضبط اتجاه التطبيق ليكون من اليمين إلى اليسار (RTL)
+      builder: (context, child) {
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: child!,
+        );
+      },
+      home: const ServicesHomeScreen(),
+    );
+  }
+}
+
+class ServicesHomeScreen extends StatelessWidget {
+  const ServicesHomeScreen({super.key});
+
+  // قائمة الخدمات المبينة في الصورة
+  final List<Map<String, String>> services = const [
+    {'title': 'كهرباء', 'icon': 'assets/icons/electricity.png'},
+    {'title': 'نجارة', 'icon': 'assets/icons/carpentry.png'},
+    {'title': 'ميكانيك', 'icon': 'assets/icons/mechanic.png'},
+    {'title': 'سباكة', 'icon': 'assets/icons/plumbing.png'},
+    {'title': 'تمريض', 'icon': 'assets/icons/nursing.png'},
+    {'title': 'صيانة جوال', 'icon': 'assets/icons/mobile_repair.png'},
+    {'title': 'تبريد وتكييف', 'icon': 'assets/icons/ac.png'},
+    {'title': 'بناء وتشطيبات', 'icon': 'assets/icons/construction.png'},
+    {'title': 'صيانة إلكترونيات', 'icon': 'assets/icons/electronics.png'},
+    {'title': 'أخرى', 'icon': 'assets/icons/others.png'},
+    {'title': 'تصوير', 'icon': 'assets/icons/photography.png'},
+    {'title': 'خدمات فندقية', 'icon': 'assets/icons/hotel.png'},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    const primaryColor = Color(0xFF2C5E2E); // اللون الأخضر
+    const accentColor = Color(0xFFC5A059);  // اللون الذهبي
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8F9FA),
+      appBar: AppBar(
+        backgroundColor: primaryColor,
+        elevation: 0,
+        centerTitle: true,
+        title: const Text(
+          'الرئيسية',
+          style: TextStyle(
+            color: accentColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.menu, color: accentColor),
+            onPressed: () {},
+          ),
+        ],
+        leading: IconButton(
+          icon: const Icon(Icons.search, color: accentColor),
+          onPressed: () {},
+        ),
+      ),
+      body: Column(
+        children: [
+          const SizedBox(height: 16),
+          const Text(
+            'قسم الخدمات',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: accentColor,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: GridView.builder(
+                itemCount: services.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, // 3 أعمدة
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 0.85, // نسبة العرض إلى الارتفاع للبطاقة
+                ),
+                itemBuilder: (context, index) {
+                  return ServiceCard(
+                    title: services[index]['title']!,
+                    iconPath: services[index]['icon']!,
+                    textColor: primaryColor,
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ServiceCard extends StatelessWidget {
+  final String title;
+  final String iconPath;
+  final Color textColor;
+
+  const ServiceCard({
+    super.key,
+    required this.title,
+    required this.iconPath,
+    required this.textColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: InkWell(
+        onTap: () {
+          // إجراء عند الضغط على الخدمة
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                // يفضل استخدام صور SVG أو أربطها بـ Image.asset
+                child: Icon(Icons.build_outlined, size: 40, color: textColor), 
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12.0, left: 4, right: 4),
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: textColor,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
